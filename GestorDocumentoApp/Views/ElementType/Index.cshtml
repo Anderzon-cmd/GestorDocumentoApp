@@ -1,0 +1,87 @@
+﻿@model List<ElementType>
+
+@{
+    ViewData["Title"] = "Element Type Page";
+}
+
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Tipo de elemento", Subtitle = "Listado de tipo de elementos" })
+
+
+<div class="my-2 flex justify-end">
+    <a asp-action="Create" class="rounded-md bg-blue-700 px-10 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-800">
+        Crear
+    </a>
+</div>
+
+<table class="min-w-full">
+
+    <thead class="border-b border-gray-100 bg-gray-200">
+        <tr>
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Id
+            </th>
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Nombre
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Descripcion
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var elementType in Model)
+        {
+            <tr class="border-b border-gray-100 bg-white transition duration-300 ease-in-out hover:bg-gray-100">
+                <td class="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
+                    @elementType.Id
+                </td>
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                    @elementType.Name
+                </td>
+
+                <td class="max-w-xs overflow-hidden px-6 py-4 text-sm text-ellipsis whitespace-nowrap text-gray-900">
+
+                    @if(elementType.Description is null)
+                    {
+                        <text>Sin descripcion</text>
+                    }
+                    else
+                    {
+                        <text>@elementType.Description</text>
+                    }
+                    
+                </td>
+
+                <td class="flex items-center px-6 py-4">
+                    <a asp-action="Edit" asp-route-id="@elementType.Id" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                        Edit
+                    </a>
+
+                    <form asp-controller="ElementType" asp-action="Delete" method="post" asp-route-id="@elementType.Id">
+
+                        <button type="submit" class="ms-3 font-medium text-red-600 hover:underline dark:text-red-500">
+                            Remove
+                        </button>
+                    </form>
+
+                    
+
+                </td>
+
+            </tr>
+        }
+
+
+    </tbody>
+</table>

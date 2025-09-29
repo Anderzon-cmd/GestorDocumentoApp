@@ -1,0 +1,34 @@
+﻿using GestorDocumentoApp.Models;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
+
+namespace GestorDocumentoApp.ViewModels
+{
+    public class ElementVM
+    {
+        public int Id { get; set; }
+        [Required(ErrorMessage ="Nombre es requerido.")]
+        public string Name { get; set; }
+        public string? Description { get; set; }
+
+        [Required(ErrorMessage = "Fecha de creacion es requerido.")]
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+
+        public int? ElementTypeId { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> ElementTypes { get; set; }
+
+    }
+
+    public class ElementTypeVM
+    {
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Nombre es requerido")]
+        public string Name { get;set;  }
+
+        public string? Description { get; set; }
+    }
+}

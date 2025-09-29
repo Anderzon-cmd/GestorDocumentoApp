@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using GestorDocumentoApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,9 @@ namespace GestorDocumentoApp.Data
         {
 
         }
+
+        public DbSet<ElementType> ElementTypes { get; set; }
+        public DbSet<Element> Elements { get; set; }
 
         
     }
