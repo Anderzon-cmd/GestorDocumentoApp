@@ -1,6 +1,6 @@
 ﻿<nav class="flex items-center justify-between p-4">
     <div>
-        <a href="/">
+        <a href="/" class="text-lg">
             <span class="font-bold antialiased">
                 SCM Document
             </span>
@@ -13,19 +13,16 @@
 
     <div class="flex gap-x-12">
 
-        <a href="/users" class="text-sm/6 font-semibold text-gray-900">
+        <a href="/users" class="font-semibold text-gray-900">
         Usuarios
         </a>
 
-        <a href="/roles" class="text-sm/6 font-semibold text-gray-900">
+        <a href="/roles" class="font-semibold text-gray-900">
         Roles
         </a>
         
     </div>
 
-
-
-    <!-- Alpine (compatible con Razor) -->
     <div x-data="{ open: false }" class="relative">
         <button type="button"
                 x-on:click="open = !open"
@@ -61,9 +58,5 @@
             </div>
         </div>
     </div>
-
-    <!-- Alpine (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-
-
 </nav>
+
