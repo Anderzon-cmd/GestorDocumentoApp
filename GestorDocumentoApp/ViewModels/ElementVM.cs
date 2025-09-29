@@ -17,8 +17,14 @@ namespace GestorDocumentoApp.ViewModels
 
         public int? ElementTypeId { get; set; }
 
+        [Required(ErrorMessage ="Proyecto es requerido.")]
+        public int? ProjectId { get; set; }
+
         [ValidateNever]
         public IEnumerable<SelectListItem> ElementTypes { get; set; }
+
+        [ValidateNever]
+        public IEnumerable<SelectListItem> Projects { get; set; }
 
     }
 

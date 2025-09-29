@@ -26,15 +26,22 @@ namespace GestorDocumentoApp.Controllers
             //    new Element{Id=1,Name="PAPS",Description="Descripciont",CreatedDate=DateTime.Now,ElementType=new ElementType{Id=1,Name="Software Descripction"}},
             //    new Element{Id=2,Name="Manual de usuario",CreatedDate=DateTime.Now.AddDays(-3)}
             //};
-            var elements = await _scmDocumentContext.Elements.OrderByDescending(element => element.CreatedDate).ToListAsync();
+            var elements = await _scmDocumentContext.Elements.AsNoTracking().Include(x=>x.Project).Include(x=>x.ElementType).OrderByDescending(element => element.CreatedDate).ToListAsync();
             return View(elements);
         }
 
         public async Task<IActionResult> Create()
         {
-            var elementTypes = await _scmDocumentContext.ElementTypes.OrderBy(elementType=>elementType.Name).ToListAsync();
+            var elementTypes = await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType=>elementType.Name).ToListAsync();
+            var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
 
-            return View(new ElementVM { ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()})});
+
+            return View(
+                new ElementVM { 
+                ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()}),
+                Projects= projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString()}),
+                }
+            );
         }
 
         [HttpPost]
@@ -44,15 +51,21 @@ namespace GestorDocumentoApp.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    var elementTypes=await _scmDocumentContext.ElementTypes.OrderBy(elementType => elementType.Name).ToListAsync();
+                    var elementTypes=await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType => elementType.Name).ToListAsync();
+                    var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
                     elementVM.ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() });
+                    elementVM.Projects= projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+
                     return View(elementVM);
                 }
                 var element = new Element { 
                     Name = elementVM.Name, 
                     Description = elementVM.Description,
                     CreatedDate = DateTime.SpecifyKind(elementVM.CreatedDate,DateTimeKind.Utc),
-                    ElementTypeId= elementVM.ElementTypeId };
+                    ElementTypeId= elementVM.ElementTypeId,
+                    ProjectId= elementVM.ProjectId.Value,
+                };
 
                 _scmDocumentContext.Add(element);
                 await _scmDocumentContext.SaveChangesAsync();
@@ -80,6 +93,7 @@ namespace GestorDocumentoApp.Controllers
             }
 
             var elementTypes = await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(element => element.Name).ToListAsync();
+            var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
 
             return View(
                 new ElementVM {
@@ -88,7 +102,10 @@ namespace GestorDocumentoApp.Controllers
                     Description = element.Description,
                     CreatedDate= element.CreatedDate,
                     ElementTypeId=element.ElementTypeId,
-                    ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()})}
+                    ProjectId=element.ProjectId,
+                    ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()}),
+                    Projects=projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                }
                 );
 
         }
@@ -98,13 +115,6 @@ namespace GestorDocumentoApp.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    var elementTypes = await _scmDocumentContext.ElementTypes.OrderBy(elementType => elementType.Name).ToListAsync();
-                    elementVM.ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() });
-                    return View(elementVM);
-                }
-
                 var element = await _scmDocumentContext.Elements.FindAsync(id);
 
                 if (element is null)
@@ -112,10 +122,23 @@ namespace GestorDocumentoApp.Controllers
                     return NotFound();
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    var elementTypes = await _scmDocumentContext.ElementTypes.OrderBy(elementType => elementType.Name).ToListAsync();
+                    var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
+
+                    elementVM.ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() });
+                    elementVM.Projects = projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+
+                    return View(elementVM);
+                }
+
+
                 element.Name = elementVM.Name;
                 element.Description = elementVM.Description;
                 element.CreatedDate = DateTime.SpecifyKind(elementVM.CreatedDate, DateTimeKind.Utc);
                 element.ElementTypeId = elementVM.ElementTypeId;
+                element.ProjectId= elementVM.ProjectId.Value;
 
                 await _scmDocumentContext.SaveChangesAsync();
 

@@ -1,10 +1,10 @@
-﻿@model List<Element>
+﻿@model List<Project>
 
 @{
-    ViewData["Title"] = "Element Page";
+    ViewData["Title"] = "Project Page";
 }
 
-@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Elemento de CI", Subtitle = "Listado de elementos de ci's" })
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Proyectos", Subtitle = "Listado de proyectos" })
 
 
 <div class="my-2 flex justify-end">
@@ -21,21 +21,11 @@
             class="px-6 py-4 text-left text-sm font-medium text-gray-900">
                 Id
             </th>
-
             <th scope="col"
             class="px-6 py-4 text-left text-sm font-medium text-gray-900">
                 Nombre
             </th>
 
-            <th scope="col"
-                class="px-6 py-4 text-left text-sm font-medium text-gray-900">
-                Proyecto
-            </th>
-
-            <th scope="col"
-                class="px-6 py-4 text-left text-sm font-medium text-gray-900">
-                Tipo de elemento
-            </th>
 
             <th scope="col"
                 class="px-6 py-4 text-left text-sm font-medium text-gray-900">
@@ -55,45 +45,48 @@
     </thead>
     <tbody>
 
-        @foreach (var element in Model)
+        @foreach (var project in Model)
         {
             <tr class="border-b border-gray-100 bg-white transition duration-300 ease-in-out hover:bg-gray-100">
                 <td class="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
-                    @element.Id
+                    @project.Id
                 </td>
 
                 <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-                    @element.Name
+                    @project.Name
                 </td>
 
                 <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-                    @element.Project.Name
+                    @project.CreationDate.ToString("yyyy-MM-ddTHH:mm")
                 </td>
 
-
-                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-                    @element.ElementType?.Name
-                </td>
-
-                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
-                    @element.CreatedDate.ToString()
-                </td>
 
 
                 <td class="max-w-xs overflow-hidden px-6 py-4 text-sm text-ellipsis whitespace-nowrap text-gray-900">
 
-                    @element.Description
+                    @if (project.Description is null)
+                    {
+                        <text>Sin descripcion</text>
+                    }
+                    else
+                    {
+                        <text>@project.Description</text>
+                    }
                     
                 </td>
 
-                <td class="flex items-center px-6 py-4">
-                    <a asp-action="Edit" asp-route-id="@element.Id" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
+                <td class="flex items-center gap-2 px-6 py-4">
+                    <a asp-action="Edit" asp-route-id="@project.Id" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
                         Edit
                     </a>
 
-                    <form asp-controller="Element" asp-action="Delete" method="post" asp-route-id="@element.Id">
+                    <a asp-action="Show" asp-route-id="@project.Id" class="font-medium text-green-600 hover:underline">
+                        Items
+                    </a>
 
-                        <button type="submit" class="ms-3 font-medium text-red-600 hover:underline dark:text-red-500">
+                    <form asp-controller="Project" asp-action="Delete" method="post" asp-route-id="@project.Id">
+
+                        <button type="submit" class="font-medium text-red-600 hover:underline dark:text-red-500">
                             Remove
                         </button>
                     </form>

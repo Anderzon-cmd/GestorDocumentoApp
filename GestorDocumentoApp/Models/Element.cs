@@ -12,5 +12,10 @@ namespace GestorDocumentoApp.Models
 
         public int? ElementTypeId { get; set; }
         public ElementType? ElementType { get; set; }
+
+        [Required]
+        public int ProjectId { get; set; }
+
+        public Project Project { get; set; }
     }
 }
