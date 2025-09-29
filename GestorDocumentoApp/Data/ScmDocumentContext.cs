@@ -17,6 +17,7 @@ namespace GestorDocumentoApp.Data
         }
 
 
+
         public DbSet<Project> Projects { get;set; }
         public DbSet<ElementType> ElementTypes { get; set; }
         public DbSet<Element> Elements { get; set; }

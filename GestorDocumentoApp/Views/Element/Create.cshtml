@@ -26,7 +26,9 @@
             <div class="sm:col-span-3">
                 <label asp-form="CreatedDate" class="text-sm/6 block font-medium text-gray-900">Fecha de creacion</label>
                 <div class="mt-2">
+
                     <input type="datetime-local" step="60" asp-for="CreatedDate" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" value="@Model.CreatedDate.ToString("yyyy-MM-ddTHH:mm")" />
+
                 </div>
             </div>
             <span asp-validation-for="CreatedDate" class="text-red-500"></span>
@@ -43,6 +45,7 @@
             </div>
         </div>
 
+
         <div class="mb-5">
             <label for="countries" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
             <select asp-for="ProjectId" asp-items="Model.Projects" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
@@ -54,6 +57,7 @@
 
         <div>
             <label for="countries" class="mb-2 block text-sm font-medium text-gray-900">Select una opcion</label>
+
             <select asp-for="ElementTypeId" asp-items="Model.ElementTypes" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
                 <option value="">-- Seleccione el tipo de elemento</option>
             </select>

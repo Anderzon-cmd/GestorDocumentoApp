@@ -43,12 +43,14 @@ namespace GestorDocumentoApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ElementTypeId");
+
 
                     b.HasIndex("ProjectId");
 
@@ -74,6 +76,7 @@ namespace GestorDocumentoApp.Migrations
 
                     b.ToTable("ElementTypes");
                 });
+
 
             modelBuilder.Entity("GestorDocumentoApp.Models.Project", b =>
                 {
@@ -306,6 +309,7 @@ namespace GestorDocumentoApp.Migrations
                         .WithMany()
                         .HasForeignKey("ElementTypeId");
 
+
                     b.HasOne("GestorDocumentoApp.Models.Project", "Project")
                         .WithMany()
                         .HasForeignKey("ProjectId")
@@ -326,6 +330,7 @@ namespace GestorDocumentoApp.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
