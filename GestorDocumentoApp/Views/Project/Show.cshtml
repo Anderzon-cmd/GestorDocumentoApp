@@ -1,0 +1,53 @@
+﻿@model Project
+
+@{
+    ViewData["Title"] = "Project Page";
+}
+
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Proyecto: " + Model.Name, Subtitle = "Listado de ci's asignados" })
+
+
+<div class="my-2 flex justify-end">
+    <a asp-action="AsignElement" asp-route-id="@Model.Id" class="rounded-md bg-blue-700 px-10 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-800">
+        Crear
+    </a>
+</div>
+
+
+<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-7 xl:gap-x-8">
+    @foreach (var element in Model.Elements)
+    {
+        <div class="group relative">
+
+            @if (element.Name.Contains("diseno", StringComparison.OrdinalIgnoreCase))
+            {
+                <img width="100" height="100" src="https://img.icons8.com/external-sbts2018-flat-sbts2018/58/external-design-civil-work-sbts2018-flat-sbts2018.png" alt="external-design-civil-work-sbts2018-flat-sbts2018" />
+            }
+            else if (element.Name.Contains("manual", StringComparison.OrdinalIgnoreCase))
+            {
+                <img width="100" height="100" src="https://img.icons8.com/color/96/user-manual.png" alt="user-manual" />
+            }
+            else if (element.Name.Contains("plan", StringComparison.OrdinalIgnoreCase))
+            {
+                <img width="100" height="100" src="https://img.icons8.com/color/96/user-manual.png" alt="user-manual" />
+            }
+            else
+            {
+                <img width="100" height="100" src="https://img.icons8.com/color/96/questions.png" alt="questions" />
+            }
+
+            <div class="mt-4 flex justify-between">
+                <div>
+                    <h3 class="text-sm text-gray-700">
+                        <a href="#">
+                            <span aria-hidden="true" class="absolute inset-0"></span>
+                            @element.Name
+                        </a>
+                    </h3>
+                    <p class="mt-1 text-sm text-gray-500">@element.CreatedDate.ToShortDateString()</p>
+                </div>
+            </div>
+        </div>
+    }
+    
+</div>

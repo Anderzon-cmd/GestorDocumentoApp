@@ -3,6 +3,7 @@ using System;
 using GestorDocumentoApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GestorDocumentoApp.Migrations
 {
     [DbContext(typeof(ScmDocumentContext))]
-    partial class ScmDocumentContextModelSnapshot : ModelSnapshot
+    [Migration("20250929051222_AddProject")]
+    partial class AddProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,16 +46,9 @@ namespace GestorDocumentoApp.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ElementTypeId");
-
-
-                    b.HasIndex("ProjectId");
 
                     b.ToTable("Elements");
                 });
@@ -76,7 +72,6 @@ namespace GestorDocumentoApp.Migrations
 
                     b.ToTable("ElementTypes");
                 });
-
 
             modelBuilder.Entity("GestorDocumentoApp.Models.Project", b =>
                 {
@@ -309,16 +304,7 @@ namespace GestorDocumentoApp.Migrations
                         .WithMany()
                         .HasForeignKey("ElementTypeId");
 
-
-                    b.HasOne("GestorDocumentoApp.Models.Project", "Project")
-                        .WithMany()
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ElementType");
-
-                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("GestorDocumentoApp.Models.Project", b =>
@@ -330,7 +316,6 @@ namespace GestorDocumentoApp.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
-
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
