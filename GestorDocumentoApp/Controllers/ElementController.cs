@@ -40,7 +40,7 @@ namespace GestorDocumentoApp.Controllers
                 new ElementVM { 
                 ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()}),
                 Projects= projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString()}),
-                }
+        }
             );
         }
 
@@ -133,6 +133,10 @@ namespace GestorDocumentoApp.Controllers
                     return View(elementVM);
                 }
 
+                if (element is null)
+                {
+                    return NotFound();
+                }
 
                 element.Name = elementVM.Name;
                 element.Description = elementVM.Description;
