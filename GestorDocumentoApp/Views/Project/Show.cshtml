@@ -7,6 +7,7 @@
 @await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Proyecto: " + Model.Name, Subtitle = "Listado de ci's asignados" })
 
 
+
 <div class="my-2 flex justify-end">
     <a asp-action="AsignElement" asp-route-id="@Model.Id" class="rounded-md bg-blue-700 px-10 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-800">
         Crear
@@ -14,10 +15,10 @@
 </div>
 
 
-<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-7 xl:gap-x-8">
+<div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-1 lg:grid-cols-3 xl:gap-x-8">
     @foreach (var element in Model.Elements)
     {
-        <div class="group relative">
+        <div class="group relative flex items-center gap-3 rounded-xl bg-white p-3 shadow transition hover:shadow-md">
 
             @if (element.Name.Contains("diseno", StringComparison.OrdinalIgnoreCase))
             {
@@ -36,18 +37,53 @@
                 <img width="100" height="100" src="https://img.icons8.com/color/96/questions.png" alt="questions" />
             }
 
-            <div class="mt-4 flex justify-between">
-                <div>
-                    <h3 class="text-sm text-gray-700">
-                        <a href="#">
-                            <span aria-hidden="true" class="absolute inset-0"></span>
-                            @element.Name
-                        </a>
-                    </h3>
-                    <p class="mt-1 text-sm text-gray-500">@element.CreatedDate.ToShortDateString()</p>
-                </div>
+            <div class="flex flex-1 flex-col">
+
+                <a asp-controller="Version" asp-action="Index" asp-route-elementId="@element.Id" class="text-gray-800 hover:text-blue-600">
+                    @element.Name
+                </a>
+
+                @{
+                    var versionActual = @element.Versions.Where(x => x.State == "active").FirstOrDefault();
+
+                    if (versionActual is not null)
+                    {
+                        <span class="me-2 mt-1 w-fit rounded-sm bg-green-100 px-1 py-0.5 text-xs font-medium text-green-800">@PhaseHelper.GetPhaseName(versionActual.Phase) • @versionActual.iteration • @versionActual.VersionCode</span>
+                    }
+                }
+            </div>
+
+
+            <div class="flex flex-row gap-2">
+
+                @if (element.ExternalUrlElement is not null)
+                {
+                    <a href="@element.ExternalUrlElement" title="Previsualizar enlace" target="_blank" rel="noopener noreferrer"
+                       class="flex items-center justify-center rounded-full bg-blue-50 p-2 text-blue-600 transition hover:bg-blue-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                             class="h-6 w-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </a>
+                }
+
+                
+                <a asp-action="CreateByElement" asp-controller="ChangeRequest" asp-route-id="@element.Id" title="Agregar cambio"
+                    class="flex items-center justify-center rounded-full bg-green-50 p-2 text-green-600 transition hover:bg-green-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                        class="h-6 w-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 2a1 1 0 00-1 1v1H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-3V3a1 1 0 00-1-1H9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6" />
+                    </svg>
+                </a>
+
             </div>
         </div>
     }
-    
 </div>
+
+

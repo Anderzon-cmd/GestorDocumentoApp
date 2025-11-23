@@ -1,4 +1,5 @@
 ﻿using GestorDocumentoApp.Data;
+using GestorDocumentoApp.Extensions;
 using GestorDocumentoApp.Models;
 using GestorDocumentoApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -19,30 +20,62 @@ namespace GestorDocumentoApp.Controllers
             _logger = logger;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? projectId, int pageNumber = 1, int pageSize = 10)
         {
+            Project? project = null;
 
-            //var elements = new List<Element> { 
-            //    new Element{Id=1,Name="PAPS",Description="Descripciont",CreatedDate=DateTime.Now,ElementType=new ElementType{Id=1,Name="Software Descripction"}},
-            //    new Element{Id=2,Name="Manual de usuario",CreatedDate=DateTime.Now.AddDays(-3)}
-            //};
+            if (projectId.HasValue)
+            {
+                project=await _scmDocumentContext.Projects.FindAsync(projectId);
 
-            var elements = await _scmDocumentContext.Elements.AsNoTracking().Include(x=>x.Project).Include(x=>x.ElementType).OrderByDescending(element => element.CreatedDate).ToListAsync();
-            return View(elements);
+                if (project is null)
+                {
+                    return NotFound();
+                }
+            }
+
+            var projects=await _scmDocumentContext.Projects.AsNoTracking().ToListAsync();
+
+            IQueryable<Element> query = _scmDocumentContext.Elements;
+
+            if (projectId.HasValue)
+            {
+                query=query.Where(x => x.ProjectId == projectId);
+            }
+
+            var page = await query
+                .Include(x => x.Project).Include(x => x.ElementType)
+                .OrderByDescending(element => element.CreatedDate).ToPagedListAsync(pageNumber, pageSize);
+
+            return View(
+                new ElementIndexVM
+                {
+                    Projects=projects.Select(x =>new SelectListItem { Value=x.Id.ToString(),Text=x.Name.ToString()}),
+                    HasNext=page.HasNext,
+                    HasPrevious=page.HasPrevious,
+                    Items=page.Items,
+                    TotalCount=page.TotalCount,
+                    PageNumber=pageNumber,
+                    PageSize=pageSize,
+                    ProjectId=projectId,
+                    ProjectName=project?.Name
+                }
+                );
         }
 
         public async Task<IActionResult> Create()
         {
 
-            var elementTypes = await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType=>elementType.Name).ToListAsync();
+            var elementTypes = await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType => elementType.Name).ToListAsync();
             var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
 
 
             return View(
-                new ElementVM { 
-                ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()}),
-                Projects= projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString()}),
-        }
+                new ElementVM
+                {
+                    ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() }),
+                    Projects = projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                }
             );
         }
 
@@ -54,21 +87,22 @@ namespace GestorDocumentoApp.Controllers
                 if (!ModelState.IsValid)
                 {
 
-                    var elementTypes=await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType => elementType.Name).ToListAsync();
+                    var elementTypes = await _scmDocumentContext.ElementTypes.AsNoTracking().OrderBy(elementType => elementType.Name).ToListAsync();
                     var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
 
                     elementVM.ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() });
-                    elementVM.Projects= projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
+                    elementVM.Projects = projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() });
 
                     return View(elementVM);
                 }
-                var element = new Element { 
-                    Name = elementVM.Name, 
+                var element = new Element
+                {
+                    Name = elementVM.Name,
                     Description = elementVM.Description,
-                    CreatedDate = DateTime.SpecifyKind(elementVM.CreatedDate,DateTimeKind.Utc),
+                    CreatedDate = DateTime.SpecifyKind(elementVM.CreatedDate, DateTimeKind.Utc),
 
-                    ElementTypeId= elementVM.ElementTypeId,
-                    ProjectId= elementVM.ProjectId.Value,
+                    ElementTypeId = elementVM.ElementTypeId,
+                    ProjectId = elementVM.ProjectId.Value,
                 };
 
                 _scmDocumentContext.Add(element);
@@ -90,7 +124,7 @@ namespace GestorDocumentoApp.Controllers
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
             var element = await _scmDocumentContext.Elements.FindAsync(id);
-            
+
             if (element is null)
             {
                 return NotFound();
@@ -101,16 +135,17 @@ namespace GestorDocumentoApp.Controllers
             var projects = await _scmDocumentContext.Projects.AsNoTracking().OrderBy(x => x.Name).ToListAsync();
 
             return View(
-                new ElementVM {
+                new ElementVM
+                {
                     Id = element.Id,
-                    Name = element.Name, 
+                    Name = element.Name,
                     Description = element.Description,
-                    CreatedDate= element.CreatedDate,
-                    ElementTypeId=element.ElementTypeId,
+                    CreatedDate = element.CreatedDate,
+                    ElementTypeId = element.ElementTypeId,
 
-                    ProjectId=element.ProjectId,
-                    ElementTypes=elementTypes.Select(elementType=>new SelectListItem { Text=elementType.Name,Value=elementType.Id.ToString()}),
-                    Projects=projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
+                    ProjectId = element.ProjectId,
+                    ElementTypes = elementTypes.Select(elementType => new SelectListItem { Text = elementType.Name, Value = elementType.Id.ToString() }),
+                    Projects = projects.Select(x => new SelectListItem { Text = x.Name, Value = x.Id.ToString() }),
                 }
 
                 );
@@ -151,7 +186,7 @@ namespace GestorDocumentoApp.Controllers
                 element.CreatedDate = DateTime.SpecifyKind(elementVM.CreatedDate, DateTimeKind.Utc);
                 element.ElementTypeId = elementVM.ElementTypeId;
 
-                element.ProjectId= elementVM.ProjectId.Value;
+                element.ProjectId = elementVM.ProjectId.Value;
 
                 await _scmDocumentContext.SaveChangesAsync();
 

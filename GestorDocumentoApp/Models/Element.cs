@@ -18,5 +18,12 @@ namespace GestorDocumentoApp.Models
         public int ProjectId { get; set; }
 
         public Project Project { get; set; }
+
+        public string? ExternalUrlElement { get; set; }
+        public string? ExternaCodeElement { get; set; }
+
+        public IEnumerable<Version> Versions { get; set; }
+
+        
     }
 }

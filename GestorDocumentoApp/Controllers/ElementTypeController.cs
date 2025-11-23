@@ -1,4 +1,5 @@
 ﻿using GestorDocumentoApp.Data;
+using GestorDocumentoApp.Extensions;
 using GestorDocumentoApp.Models;
 using GestorDocumentoApp.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -18,19 +19,22 @@ namespace GestorDocumentoApp.Controllers
         }
 
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index( int pageNumber = 1, int pageSize = 10)
         {
-            //var elementTypes = new List<ElementType>
-            //{
-            //    new ElementType{ Id=1,Name="Manual",Description="Manual de usuarios"},
-            //    new ElementType { Id=2,Name="Procedimientos"},
-            //    new ElementType {Id=3,Name="Plan"},
-            //    new ElementType {Id=4,Name="Instructivo" },
-            //    new ElementType {Id=5,Name="Políticas" },
-            //    new ElementType { Id = 6,Name="Reporte" },
-            //    new ElementType { Id=7,Name="Guía" }
-            //};
-            var elementTypes = await _scmDocumentContext.ElementTypes.OrderBy(elementType => elementType.Name).ToListAsync();
+            if (pageNumber < 1)
+            {
+                pageNumber = 1;
+            }
+
+            if (pageSize < 1)
+            {
+                pageSize = 10;
+            }
+
+            var elementTypes = await _scmDocumentContext.ElementTypes
+                .AsNoTracking().OrderBy(elementType => elementType.Name)
+                .ToPagedListAsync(pageNumber,pageSize);
+            
             return View(elementTypes);
 
         }

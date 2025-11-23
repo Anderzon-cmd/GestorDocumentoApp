@@ -45,12 +45,32 @@
         @Html.ValidationSummary(true, "", new { @class = "text-red-500" })
         
 
-        <div>
-            <label for="countries" class="mb-2 block text-sm font-medium text-gray-900">Select una opcion</label>
+        <div class="mt-5">
+            <label for="countries" class="mb-2 block text-sm font-medium text-gray-900">Seleccione una opcion</label>
             <select asp-for="ElementTypeId" asp-items="Model.ElementTypes" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
                 <option value="">-- Seleccione el tipo de elemento</option>
             </select>
         </div>
+
+        <div class="mt-5 hidden" id="reposContainer">
+            <label class="mb-2 text-sm font-medium text-gray-900">Seleccione una opcion</label>
+            <select id="reposSelect" name="ExternaCodeElement" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+            </select>
+        </div>
+
+
+        <div class="group relative z-0 mt-5 hidden w-full" id="containerUrl">
+
+            <div class="sm:col-span-3">
+                <label for="ExternalUrlElement" class="text-sm/6 block font-medium text-gray-900">Url</label>
+                <div class="mt-2">
+                    <input readonly type="text" id="ExternalUrlElement" name="ExternalUrlElement" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                </div>
+            </div>
+
+        </div>
+
+
 
         <button type="submit"
                 class="mt-5 max-w-fit rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:ring-blue-300 focus:outline-none sm:w-auto">
@@ -60,3 +80,7 @@
 
 
 </div> 
+
+@section Scripts{
+    <script src="~/js/Github.js"></script>
+}

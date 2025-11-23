@@ -75,24 +75,37 @@
                     
                 </td>
 
-                <td class="flex items-center gap-2 px-6 py-4">
-                    <a asp-action="Edit" asp-route-id="@project.Id" class="font-medium text-blue-600 hover:underline dark:text-blue-500">
-                        Edit
+                <td class="flex items-center gap-3 px-6 py-4">
+
+                    <a asp-action="Edit" asp-route-id="@project.Id"
+                       class="text-blue-600 hover:text-blue-800 dark:text-blue-500 dark:hover:text-blue-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M16.862 4.487l1.687 1.687a1.5 1.5 0 010 2.121l-9.193 9.193a4.5 4.5 0 01-1.591.99l-3.41 1.137a.75.75 0 01-.948-.948l1.137-3.41a4.5 4.5 0 01.99-1.591l9.193-9.193a1.5 1.5 0 012.121 0z" />
+                        </svg>
                     </a>
 
-                    <a asp-action="Show" asp-route-id="@project.Id" class="font-medium text-green-600 hover:underline">
-                        Items
+                    <a asp-action="Show" asp-route-id="@project.Id"
+                       class="text-gray-600 hover:text-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
                     </a>
 
-                    <form asp-controller="Project" asp-action="Delete" method="post" asp-route-id="@project.Id">
-
-                        <button type="submit" class="font-medium text-red-600 hover:underline dark:text-red-500">
-                            Remove
+                    <form asp-action="Delete" asp-controller="Project" method="post"
+                          asp-route-id="@project.Id" class="inline">
+                        <button type="submit"
+                                class="text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor" class="inline h-5 w-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M6 18L18 6M6 6l12 12" />
+                            </svg>
                         </button>
                     </form>
-
-                    
-
                 </td>
 
             </tr>

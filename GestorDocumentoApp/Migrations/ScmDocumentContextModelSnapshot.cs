@@ -22,6 +22,49 @@ namespace GestorDocumentoApp.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("GestorDocumentoApp.Models.ChangeRequest", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("Action")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ClasificationType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("ElementId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Remarks")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ElementId");
+
+                    b.ToTable("ChangeRequests");
+                });
+
             modelBuilder.Entity("GestorDocumentoApp.Models.Element", b =>
                 {
                     b.Property<int>("Id")
@@ -39,10 +82,15 @@ namespace GestorDocumentoApp.Migrations
                     b.Property<int?>("ElementTypeId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("ExternaCodeElement")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ExternalUrlElement")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
 
                     b.Property<int>("ProjectId")
                         .HasColumnType("integer");
@@ -50,7 +98,6 @@ namespace GestorDocumentoApp.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ElementTypeId");
-
 
                     b.HasIndex("ProjectId");
 
@@ -76,7 +123,6 @@ namespace GestorDocumentoApp.Migrations
 
                     b.ToTable("ElementTypes");
                 });
-
 
             modelBuilder.Entity("GestorDocumentoApp.Models.Project", b =>
                 {
@@ -105,6 +151,96 @@ namespace GestorDocumentoApp.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("GestorDocumentoApp.Models.RequirementType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RequirementTypes");
+                });
+
+            modelBuilder.Entity("GestorDocumentoApp.Models.Version", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ChangeRequestId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ElementId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ElementUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int?>("ParentVersionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Phase")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RequirementTypeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ToolUrl")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("UploadDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VersionCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("iteration")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChangeRequestId")
+                        .IsUnique();
+
+                    b.HasIndex("ElementId");
+
+                    b.HasIndex("ParentVersionId");
+
+                    b.HasIndex("RequirementTypeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Versions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -303,15 +439,25 @@ namespace GestorDocumentoApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GestorDocumentoApp.Models.ChangeRequest", b =>
+                {
+                    b.HasOne("GestorDocumentoApp.Models.Element", "Element")
+                        .WithMany()
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Element");
+                });
+
             modelBuilder.Entity("GestorDocumentoApp.Models.Element", b =>
                 {
                     b.HasOne("GestorDocumentoApp.Models.ElementType", "ElementType")
                         .WithMany()
                         .HasForeignKey("ElementTypeId");
 
-
                     b.HasOne("GestorDocumentoApp.Models.Project", "Project")
-                        .WithMany()
+                        .WithMany("Elements")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -330,7 +476,47 @@ namespace GestorDocumentoApp.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
 
+            modelBuilder.Entity("GestorDocumentoApp.Models.Version", b =>
+                {
+                    b.HasOne("GestorDocumentoApp.Models.ChangeRequest", "ChangeRequest")
+                        .WithMany()
+                        .HasForeignKey("ChangeRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GestorDocumentoApp.Models.Element", "Element")
+                        .WithMany("Versions")
+                        .HasForeignKey("ElementId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GestorDocumentoApp.Models.Version", "ParentVersion")
+                        .WithMany()
+                        .HasForeignKey("ParentVersionId");
+
+                    b.HasOne("GestorDocumentoApp.Models.RequirementType", "RequirementType")
+                        .WithMany()
+                        .HasForeignKey("RequirementTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ChangeRequest");
+
+                    b.Navigation("Element");
+
+                    b.Navigation("ParentVersion");
+
+                    b.Navigation("RequirementType");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,6 +568,16 @@ namespace GestorDocumentoApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GestorDocumentoApp.Models.Element", b =>
+                {
+                    b.Navigation("Versions");
+                });
+
+            modelBuilder.Entity("GestorDocumentoApp.Models.Project", b =>
+                {
+                    b.Navigation("Elements");
                 });
 #pragma warning restore 612, 618
         }

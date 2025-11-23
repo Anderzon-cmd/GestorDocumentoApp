@@ -29,6 +29,16 @@ namespace GestorDocumentoApp.ViewModels
 
     }
 
+    public class ElementIndexVM:PagedList<Element>
+    {
+
+        public string? ProjectName { get; set; }
+        public int? ProjectId { get; set; }
+        public bool HasPrevious { get; set; }
+        public bool HasNext { get; set; }
+        public IEnumerable<SelectListItem> Projects { get; set; }
+    }
+
     public class ElementTypeVM
     {
         public int Id { get; set; }

@@ -1,0 +1,97 @@
+﻿@model ChangeRequestCreateVM
+
+@{
+    ViewData["Title"] = "Cambio Page";
+}
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Peticion de cambio", Subtitle = "Formulario de edicion" })
+
+
+<div class="mt-5">
+    <form class="mx-auto w-full" asp-action="Edit" method="post">
+
+        <div class="group relative z-0 mb-5 w-full">
+
+            <div class="sm:col-span-3">
+                <label asp-form="Code" class="text-sm/6 block font-medium text-gray-900">Codigo</label>
+                <div class="mt-2">
+                    <input type="text" asp-for="Code" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                </div>
+            </div>
+            <span asp-validation-for="Code" class="text-red-500"></span>
+
+        </div>
+
+        <div class="mb-5 grid grid-cols-2 gap-2">
+            <div class="group relative">
+                <div class="col-span-full">
+                    <label asp-for="Description" class="text-sm/6 block font-medium text-gray-900">Descripcion</label>
+                    <div class="mt-2">
+                        <textarea asp-for="Description" rows="2" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="group relative">
+                <div class="col-span-full">
+                    <label asp-for="Remarks" class="text-sm/6 block font-medium text-gray-900">Observaciones</label>
+                    <div class="mt-2">
+                        <textarea asp-for="Remarks" rows="2" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-5 grid grid-cols-2 gap-2">
+            <div class="">
+                <label for="ClasificationType" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="ClasificationType" asp-items="Model.ClasificationOptions" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione la clasificacion --</option>
+                </select>
+                <span asp-validation-for="ClasificationType" class="text-red-500"></span>
+            </div>
+
+            <div class="">
+                <label for="Priority" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="Priority" asp-items="Model.PriorityOptions" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione la prioridad --</option>
+                </select>
+                <span asp-validation-for="Priority" class="text-red-500"></span>
+            </div>
+        </div>
+
+        <div class="mb-5 grid grid-cols-2 gap-2">
+
+
+            <div>
+                <label for="Status" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="Status" asp-items="Model.StatusOptions" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione el proceso --</option>
+                </select>
+                <span asp-validation-for="Status" class="text-red-500"></span>
+            </div>
+
+            <div>
+                <label for="Action" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="Action" asp-items="Model.ActionOptions" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione el proceso --</option>
+                </select>
+                <span asp-validation-for="Action" class="text-red-500"></span>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <label for="Status" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+            <select asp-for="ElementId" asp-items="Model.Elements" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                <option value="">-- Seleccione el ci's --</option>
+            </select>
+            <span asp-validation-for="ElementId" class="text-red-500"></span>
+        </div>
+
+        <button type="submit"
+                class="mt-5 max-w-fit rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:ring-blue-300 focus:outline-none sm:w-auto">
+            Actualizar
+        </button>
+    </form>
+
+
+</div> 

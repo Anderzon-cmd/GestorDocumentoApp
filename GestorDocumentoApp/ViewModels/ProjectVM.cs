@@ -32,6 +32,9 @@ namespace GestorDocumentoApp.ViewModels
 
         public int? ElementTypeId { get; set; }
 
+        public string? ExternalUrlElement { get; set; } = null;
+        public string? ExternaCodeElement { get; set; } = null;
+
 
         [ValidateNever]
         public IEnumerable<SelectListItem> ElementTypes { get; set; }

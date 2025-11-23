@@ -1,0 +1,167 @@
+﻿@using GestorDocumentoApp.Utils
+@model DasboardVM
+
+<div class="space-y-10 p-6">
+
+    <div>
+        <h2 class="mb-4 text-2xl font-semibold text-gray-800">Solicitudes de Cambio por Estado</h2>
+
+        <div class="rounded-lg bg-white p-4 shadow">
+            <canvas id="crChart" class="h-64 w-full"></canvas>
+        </div>
+
+        <table class="min-w-full">
+
+            <thead class="border-b border-gray-100 bg-gray-200">
+                <tr>
+                    <th scope="col"
+                    class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                        Proyecto
+                    </th>
+                    <th scope="col"
+                    class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                        Estado
+                    </th>
+                    <th scope="col"
+                    class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                        Total
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.ChangeRequestSummary)
+                {
+                    <tr class="border-b border-gray-100 bg-white transition duration-300 ease-in-out hover:bg-gray-100">
+                        <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                            @item.ProjectName
+                        </td>
+
+                        <td class="px-6 py-2 text-sm whitespace-nowrap text-gray-900">
+                            @item.Status
+                        </td>
+                        <td class="px-6 py-2 text-sm whitespace-nowrap text-gray-900">
+                            @item.Total
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <h2 class="mb-4 text-2xl font-semibold text-gray-800">Configuración Actual de Proyectos</h2>
+
+        <div class="overflow-x-auto">
+
+            <table class="min-w-full">
+
+                <thead class="border-b border-gray-100 bg-gray-200">
+                    <tr>
+                        <th scope="col"
+                        class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                            Proyecto
+                        </th>
+                        <th scope="col"
+                        class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                            Elemento
+                        </th>
+                        <th scope="col"
+                        class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                            Última Versión
+                        </th>
+                        <th scope="col"
+                        class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                            Fecha
+                        </th>
+
+                        <th scope="col"
+                        class="px-6 py-2 text-left text-sm font-medium text-gray-900">
+                            Estado
+                        </th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cfg in Model.ProjectConfigurations)
+                    {
+                        <tr class="border-b border-gray-100 bg-white transition duration-300 ease-in-out hover:bg-gray-100">
+                            <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                                @cfg.ProjectName
+                            </td>
+                            <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                                @cfg.ElementName
+                            </td>
+                            <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                                @cfg.LatestVersion
+                            </td>
+                            <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                                @if(cfg.VersionDate != DateTime.MinValue)
+                                {
+                                    @cfg.VersionDate?.ToShortDateString()
+                                    
+                                }
+                                else
+                                {
+                                    <text>----</text>
+                                }
+                            </td>
+                            <td class="px-6 py-2 text-sm font-medium whitespace-nowrap text-gray-900">
+                                @if (cfg.Status is null)
+                                {
+                                    <text>----</text>
+                                }
+                                else
+                                {
+                                    if (cfg.Status == "active")
+                                    {
+                                        <span class="rounded bg-green-200 px-2 capitalize">@cfg.Status</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bg-yellow-500-400 px-2 capitalize">@cfg.Status</span>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('crChart').getContext('2d');
+        const data = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.ChangeRequestSummary));
+
+        const grouped = {};
+        data.forEach(item => {
+            if (!grouped[item.ProjectName]) grouped[item.ProjectName] = {};
+            grouped[item.ProjectName][item.Status] = item.Total;
+        });
+
+        const labels = [...new Set(data.map(d => d.Status))];
+        const datasets = Object.entries(grouped).map(([project, values], i) => ({
+            label: project,
+            data: labels.map(l => values[l] || 0),
+            backgroundColor: `hsl(${i * 50}, 70%, 60%)`
+        }));
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    title: { display: true, text: 'Solicitudes de Cambio por Proyecto y Estado' }
+                }
+            }
+        });
+    </script>
+}

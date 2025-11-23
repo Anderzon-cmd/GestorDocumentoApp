@@ -13,12 +13,12 @@
 
     <div class="flex gap-x-12">
 
-        <a href="/users" class="font-semibold text-gray-900">
-        Usuarios
+        <a asp-action="Index" asp-controller="Project"  class="font-semibold text-gray-900">
+        Proyectos
         </a>
 
-        <a href="/roles" class="font-semibold text-gray-900">
-        Roles
+        <a asp-action="Index" asp-controller="Element" class="font-semibold text-gray-900">
+        Elementos
         </a>
         
     </div>
@@ -45,12 +45,12 @@
                     <div class="font-medium">Nombre de usuario</div>
                 </div>
 
-                <ul class="py-2 text-sm text-gray-700" aria-labelledby="menuButton">
+                <ul class="text-sm text-gray-700" aria-labelledby="menuButton">
                     <li><a asp-controller="Dashboard" asp-action="Index" class="block px-4 py-2 hover:bg-gray-100">Dashboard</a></li>
                     <li><a asp-controller="Settings" asp-action="Index" class="block px-4 py-2 hover:bg-gray-100">Configuración</a></li>
                 </ul>
 
-                <div class="py-1">
+                <div>
                     <form asp-controller="Account" asp-action="Logout" method="post">
                         <button type="submit" class="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100">Salir</button>
                     </form>

@@ -1,0 +1,143 @@
+﻿@model VersionVM
+
+@{
+    ViewData["Title"] = "Version Page";
+}
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = Model.ElementName, Subtitle = "Formulario de creacion de version" })
+
+
+<div class="mt-10">
+    <form class="asp-action= mx-auto w-full" Create" asp-route-elementId="@Model.ElementId" method="post">
+
+        <input type="number" asp-for="ElementId" hidden />
+        <input type="text" asp-for="ElementName" hidden />
+
+        <div class="grid grid-cols-2 gap-2">
+            <div class="group relative z-0 mb-5">
+
+                <div class="sm:col-span-3">
+                    <label asp-form="Name" class="text-sm/6 block font-medium text-gray-900">Nombre</label>
+                    <div class="mt-2">
+                        <input type="text" asp-for="Name" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                    </div>
+                </div>
+                <span asp-validation-for="Name" class="text-red-500"></span>
+
+            </div>
+
+
+            <div class="group relative z-0 mb-5">
+
+                <div class="sm:col-span-3">
+                    <label asp-form="UploadDate" class="text-sm/6 block font-medium text-gray-900">Fecha de creacion</label>
+                    <div class="mt-2">
+                        <input readonly type="datetime-local" value="@Model.UploadDate.ToString("yyyy-MM-ddTHH:mm")" step="60" asp-for="UploadDate" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                    </div>
+                </div>
+                <span asp-validation-for="UploadDate" class="text-red-500"></span>
+
+            </div>
+        </div>
+
+
+        <div class="group relative mb-5">
+            <div class="col-span-full">
+                <label asp-for="ElementUrl" class="text-sm/6 block font-medium text-gray-900">ElementUrl</label>
+                <div class="mt-2">
+                    <textarea asp-for="ElementUrl" rows="2" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></textarea>
+                </div>
+            </div>
+            <span asp-validation-for="ElementUrl" class="text-red-500"></span>
+        </div>
+
+        <div class="group relative mb-5">
+            <div class="col-span-full">
+                <label asp-for="ToolUrl" class="text-sm/6 block font-medium text-gray-900">ToolUrl</label>
+                <div class="mt-2">
+                    <textarea asp-for="ToolUrl" rows="2" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6"></textarea>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="grid grid-cols-2 gap-2">
+            <div class="group relative z-0 mb-5 w-full">
+                <div class="sm:col-span-3">
+                    <label asp-form="State" class="text-sm/6 block font-medium text-gray-900">Estado</label>
+                    <div class="mt-2">
+                        <input value="Inactivo" readonly type="text" asp-for="State" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                    </div>
+                </div>
+                <span asp-validation-for="State" class="text-red-500"></span>
+
+            </div>
+
+
+            <div class="group relative z-0 mb-5 w-full">
+
+                <div class="sm:col-span-3">
+                    <label asp-form="VersionCode" class="text-sm/6 block font-medium text-gray-900">Codigo de version</label>
+                    <div class="mt-2">
+                        <input type="text" asp-for="VersionCode" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                    </div>
+                </div>
+                <span asp-validation-for="VersionCode" class="text-red-500"></span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+            <div class="mb-5">
+                <label for="Phase" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="Phase" asp-items="Model.Phases" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione el una de las fases</option>
+                </select>
+                <span asp-validation-for="Phase" class="text-red-500"></span>
+            </div>
+
+            <div class="group relative z-0 mb-5 w-full">
+
+                <div class="sm:col-span-3">
+                    <label asp-form="Iteration" class="text-sm/6 block font-medium text-gray-900">Iteracion</label>
+                    <div class="mt-2">
+                        <input type="number" value="@Model.Iteration" asp-for="Iteration" autocomplete="given-name" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-blue-600 sm:text-sm/6" />
+                    </div>
+                </div>
+                <span asp-validation-for="Iteration" class="text-red-500"></span>
+            </div>
+
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+            <div class="mb-5">
+                <label for="RequirementTypeId" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="RequirementTypeId" asp-items="Model.RequirementTypes" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione el tipo de requerimiento</option>
+                </select>
+                <span asp-validation-for="RequirementTypeId" class="text-red-500"></span>
+            </div>
+
+            <div class="mb-5">
+                <label for="ParentVersionId" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+                <select asp-for="ParentVersionId" asp-items="Model.PreviousVersions" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                    <option value="">-- Seleccione la version anterior</option>
+                </select>
+                <span asp-validation-for="ParentVersionId" class="text-red-500"></span>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <label for="ChangeRequestId" class="mb-2 block text-sm font-medium text-gray-900">Selecione una opcion</label>
+            <select asp-for="ChangeRequestId" asp-items="Model.ChangeRequests" class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-600 focus:ring-blue-600">
+                <option value="">-- Seleccione una peticion de cambio.</option>
+            </select>
+            <span asp-validation-for="ChangeRequestId" class="text-red-500"></span>
+        </div>
+
+        <button type="submit"
+                class="mt-5 max-w-fit rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:ring-blue-300 focus:outline-none sm:w-auto">
+            Crear
+        </button>
+    </form>
+
+
+</div> 

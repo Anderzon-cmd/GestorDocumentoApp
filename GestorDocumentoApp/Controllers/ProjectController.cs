@@ -144,7 +144,7 @@ namespace GestorDocumentoApp.Controllers
 
         public async Task<IActionResult> Show(int id)
         {
-            var project = await _scmDocumentContext.Projects.AsNoTracking().Include(x => x.Elements.OrderByDescending(x=>x.Name)).Where(x => x.Id == id)
+            var project = await _scmDocumentContext.Projects.AsNoTracking().Include(x => x.Elements.OrderByDescending(x=>x.CreatedDate)).ThenInclude(x=>x.Versions).Where(x => x.Id == id)
                 .FirstOrDefaultAsync(x=>x.Id==id);
             if (project is null)
             {
@@ -198,7 +198,10 @@ namespace GestorDocumentoApp.Controllers
                 Description = projectElementVM.Description,
                 CreatedDate = DateTime.SpecifyKind(projectElementVM.CreatedDate, DateTimeKind.Utc),
                 ElementTypeId = projectElementVM.ElementTypeId,
-                ProjectId = project.Id
+                ProjectId = project.Id,
+                ExternaCodeElement = projectElementVM.ExternaCodeElement,
+                ExternalUrlElement = projectElementVM.ExternalUrlElement,
+                
             };
 
             _scmDocumentContext.Add(element);

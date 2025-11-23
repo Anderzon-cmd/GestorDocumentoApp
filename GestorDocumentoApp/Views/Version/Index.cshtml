@@ -1,0 +1,205 @@
+﻿@model Element
+
+@{
+    ViewData["Title"] = "Version Page";
+}
+
+@await Html.PartialAsync("_HeaderTitle", new HeaderTitle { Title = "Elemento: " + Model.Name, Subtitle = "Historial" })
+
+@if (TempData["Message"] != null)
+{
+    var type = TempData["MessageType"]?.ToString() ?? "info";
+    var alertClass = type switch
+    {
+        "success" => "bg-green-50 text-green-800",
+        "error" => "bg-red-50 text-red-800",
+        "warning" => "bg-yellow-50 text-yellow-800",
+        _ => "bg-gray-50 text-gray-800"
+    };
+
+    <div class="rounded @alertClass p-4" role="alert">
+        @TempData["Message"]
+    </div>
+}
+
+<div class="my-2 flex justify-end">
+    <a asp-action="Create" asp-route-elementId="@Model.Id" class="rounded-md bg-blue-700 px-10 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-blue-800">
+        Crear
+    </a>
+</div>
+
+<table class="min-w-full">
+
+    <thead class="border-b border-gray-100 bg-gray-200">
+        <tr>
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Id
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Nombre
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Version
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Version anterior
+            </th>
+
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+
+                Estado
+            </th>
+
+            <th scope="col"
+                class="max-w-[200px] px-6 py-4 text-left text-sm font-medium break-words text-gray-900">
+
+                Link de documento
+            </th>
+
+            <th scope="col"
+                class="max-w-[200px] px-6 py-4 text-left text-sm font-medium break-words text-gray-900">
+
+                Link de herramienta
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+
+                Fecha de creacion
+            </th>
+
+            <th scope="col"
+            class="px-6 py-4 text-left text-sm font-medium text-gray-900">
+                Acciones
+            </th>
+
+
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var version in Model.Versions)
+        {
+            <tr class="border-b border-gray-100 bg-white transition duration-300 ease-in-out hover:bg-gray-100">
+                <td class="px-6 py-4 text-sm font-medium whitespace-nowrap text-gray-900">
+                    @version.Id
+                </td>
+
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                    @version.Name
+                </td>
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                    @version.VersionCode
+                </td>
+
+
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+                    @if(version.ParentVersion != null)
+                    {
+                        <text>
+                            @version.ParentVersion?.VersionCode | @version.ParentVersion?.Id
+                        </text>
+                    }
+                </td>
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+
+
+                    <div class="flex items-center">
+                        @if (version.State.Equals("active"))
+                        {
+                            <div class="me-2 h-2.5 w-2.5 rounded-full bg-green-500"></div><text>Activo</text>
+                        }
+                        else
+                        {
+                            <div class="me-2 h-2.5 w-2.5 rounded-full bg-yellow-500"></div>
+
+                            <text>Inactivo</text>
+                        }
+
+                    </div>
+
+                </td>
+
+                <td class="max-w-[300px] px-6 py-4 text-sm break-words">
+                    <a href="@version.ElementUrl" class="text-blue-500 underline">
+                        @version.ElementUrl
+                    </a>
+                </td>
+
+                <td class="max-w-[300px] px-6 py-4 text-sm break-words text-gray-900">
+
+                    <a href="@version.ElementUrl" class="text-blue-500 underline">
+                        @version.ToolUrl
+                    </a>
+
+                </td>
+
+                <td class="px-6 py-4 text-sm whitespace-nowrap text-gray-900">
+
+                    @version.UploadDate.ToShortDateString()
+                </td>
+
+                <td class="flex items-center px-6 py-4">
+                    
+                    <div class="flex space-x-2 text-gray-600">
+                        <a asp-action="Edit" asp-route-id="@version.Id"
+                           class="hover:text-blue-500"
+                           title="Editar">
+                            <svg stroke="currentColor" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="15" height="15" color="text-blue-500" viewBox="0 0 50 50">
+                                <path d="M 43.125 2 C 41.878906 2 40.636719 2.488281 39.6875 3.4375 L 38.875 4.25 L 45.75 11.125 C 45.746094 11.128906 46.5625 10.3125 46.5625 10.3125 C 48.464844 8.410156 48.460938 5.335938 46.5625 3.4375 C 45.609375 2.488281 44.371094 2 43.125 2 Z M 37.34375 6.03125 C 37.117188 6.0625 36.90625 6.175781 36.75 6.34375 L 4.3125 38.8125 C 4.183594 38.929688 4.085938 39.082031 4.03125 39.25 L 2.03125 46.75 C 1.941406 47.09375 2.042969 47.457031 2.292969 47.707031 C 2.542969 47.957031 2.90625 48.058594 3.25 47.96875 L 10.75 45.96875 C 10.917969 45.914063 11.070313 45.816406 11.1875 45.6875 L 43.65625 13.25 C 44.054688 12.863281 44.058594 12.226563 43.671875 11.828125 C 43.285156 11.429688 42.648438 11.425781 42.25 11.8125 L 9.96875 44.09375 L 5.90625 40.03125 L 38.1875 7.75 C 38.488281 7.460938 38.578125 7.011719 38.410156 6.628906 C 38.242188 6.246094 37.855469 6.007813 37.4375 6.03125 C 37.40625 6.03125 37.375 6.03125 37.34375 6.03125 Z"></path>
+                            </svg>
+                        </a>
+
+                        <form asp-action="SetVersion" asp-controller="Version" method="post" class="inline">
+                            <input type="hidden" name="id" value="@version.Id" />
+                            <button type="submit" class="hover:text-green-500" title="Establecer versión">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M5 13l4 4L19 7" />
+                                </svg>
+                            </button>
+                        </form>
+
+                        <form asp-action="UpVersion" asp-controller="Version" method="post" class="inline">
+                            <input type="hidden" name="id" value="@version.Id" />
+                            <button type="submit" class="hover:text-yellow-500" title="Subir nivel">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M5 10l7-7 7 7M5 20h14" />
+                                </svg>
+                            </button>
+                        </form>
+
+                        <form asp-action="DownVersion" asp-controller="Version" method="post" class="inline">
+                            <input type="hidden" name="id" value="@version.Id" />
+                            <button type="submit" class="hover:text-red-500" title="Bajar nivel">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 14l-7 7-7-7M5 4h14" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+
+
+                </td>
+
+            </tr>
+        }
+
+
+    </tbody>
+</table>

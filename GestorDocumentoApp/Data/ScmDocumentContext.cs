@@ -17,13 +17,15 @@ namespace GestorDocumentoApp.Data
         }
 
 
-
+        public DbSet<RequirementType> RequirementTypes { get; set; }
         public DbSet<Project> Projects { get;set; }
         public DbSet<ElementType> ElementTypes { get; set; }
         public DbSet<Element> Elements { get; set; }
 
-        
+        public DbSet<GestorDocumentoApp.Models.Version> Versions { get; set; }
 
-        
+        public DbSet<ChangeRequest> ChangeRequests { get; set; }
+
+
     }
 }

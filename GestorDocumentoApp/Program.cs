@@ -1,4 +1,6 @@
 using GestorDocumentoApp.Data;
+using GestorDocumentoApp.Migrations;
+using GestorDocumentoApp.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,7 @@ builder.Services.AddIdentity<IdentityUser,IdentityRole>()
     .AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<GithubService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -48,6 +51,12 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseCors(opt =>
+{
+    opt.AllowAnyMethod();
+    opt.WithOrigins(["http://127.0.0.1:3000"]);
+});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
